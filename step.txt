@@ -1,0 +1,12 @@
+Step for playing a song with soundclound in a "raw" method:
+
+1. Obtain the track ID
+
+2. Get JSON from https://api-v2.soundcloud.com/tracks/TRACK_ID?client_id=CLIENT_ID
+
+3. From JSON parse MP3 progressive stream URL
+    Like: "https://api-v2.soundcloud.com/media/soundcloud:tracks:488625309/c0d9b93d-4a34-4ccf-8e16-7a87cfaa9f79/stream/progressive"
+
+4. Make a request to this url adding ?client_id=... and it'll give you YET ANOTHER url in its return json.
+
+Using the url returned from the previous step, you can link directly to that in the browser, and it'll take you to your track content. I checked on VLC by inputting the link and it streams correctly.
