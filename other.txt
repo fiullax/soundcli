@@ -1,0 +1,19 @@
+for track in playlist.tracks:
+    data = json.loads(track)
+    print(data)
+    break
+
+# now that we have the track id, we can get a list of comments, for example
+for track in client.get('/tracks/%d/comments' % track.id):
+    print 'Someone said: %s at %d' % (comment.body, comment.timestamp)
+
+
+tracks = client.get('/tracks', limit=1)
+for track in tracks:
+    print (track.author + '|' + track.title)
+
+# get the tracks streaming URL
+stream_url = client.get(track.stream_url, allow_redirects=False)
+
+# print the tracks stream URL
+print (stream_url.location)
