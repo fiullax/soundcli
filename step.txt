@@ -10,3 +10,6 @@ Step for playing a song with soundclound in a "raw" method:
 4. Make a request to this url adding ?client_id=... and it'll give you YET ANOTHER url in its return json.
 
 Using the url returned from the previous step, you can link directly to that in the browser, and it'll take you to your track content. I checked on VLC by inputting the link and it streams correctly.
+
+Usefull link:
+https://stackoverflow.com/questions/59148005/soundcloud-api-stream-endpoint-giving-401-error
