@@ -2,6 +2,7 @@ import soundcloud
 import json
 import webbrowser
 import urllib.request
+import vlc
 
 # Client_id retrived from kodi add-on
 key = 'cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
@@ -44,3 +45,20 @@ print(data_1['url'])
 
 # Open url in a new window of the default browser, if possible
 webbrowser.open_new(data_1['url'])
+
+"""
+# define VLC instance
+instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
+
+# Define VLC player
+player = instance.media_player_new()
+
+# Define VLC media
+media = instance.media_new(url)
+
+# Set player media
+player.set_media(media)
+
+# Play the media
+player.play()
+"""
