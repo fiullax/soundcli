@@ -3,6 +3,7 @@ import json
 import webbrowser
 import urllib2
 import vlc
+import time
 
 # Client_id retrived from kodi add-on
 key = 'cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
@@ -43,10 +44,11 @@ data_1 = json.loads(res_progressive_url.read().decode())
 
 print(data_1['url'])
 
-# Open url in a new window of the default browser, if possible
-webbrowser.open_new(data_1['url'])
+url = data_1['url']
 
-"""
+# Open url in a new window of the default browser, if possible
+# webbrowser.open_new(data_1['url'])
+
 # define VLC instance
 instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
 
@@ -61,4 +63,5 @@ player.set_media(media)
 
 # Play the media
 player.play()
-"""
+
+time.sleep(150)
