@@ -4,6 +4,7 @@ import webbrowser
 import urllib2
 import vlc
 import time
+import random
 
 
 class SoundClient:
@@ -48,8 +49,6 @@ class SoundClient:
         res_progressive_url = urllib2.urlopen(progressive_url)
         data_1 = json.loads(res_progressive_url.read().decode())
 
-        print('Media url: ' + data_1['url'])
-
         return data_1['url']
         
     # Open a new VLC player
@@ -73,8 +72,10 @@ def main():
     playlist_url = 'https://soundcloud.com/mattias-fiullax-games/sets/trap-italiana-free'
 
     playlist = sound_client.resolve_url(playlist_url) 
-
+    
     sound_client.open_player()
+
+    """ Playlist play in order
     for track in sound_client.get_playlist_tracks(playlist):
         track_id = track['id']
         
@@ -85,10 +86,26 @@ def main():
         duration_second = float(track['duration']) / 1000
         
         time.sleep(duration_second)
-        
+    """    
+    
     # Open url in a new window of the default browser, if possible
     # webbrowser.open_new(data_1['url'])
-
+    
+    # Playlist random play
+    playlist = sound_client.get_playlist_tracks(playlist)
+    while True:
+        track = random.choice(playlist)
+        track_id = track['id']
+        
+        media_url = sound_client.get_track_media_url(track_id)
+    
+        print('Playing: ' + track['title'])
+        sound_client.play_media(media_url)
+        
+        duration_second = float(track['duration']) / 1000
+        
+        time.sleep(duration_second)
+    
 
 if __name__ == "__main__":
     main()
