@@ -35,21 +35,25 @@ class SoundClient:
         # TODO: Review in general the function
         # return the media url of the track (ready to be played)
     def get_track_media_url(self, track_id):
-        print('Retriving media url for track #' + str(track_id))
-        track_url = 'https://api-v2.soundcloud.com/tracks/TRACK_ID?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
-        track_url = track_url.replace('TRACK_ID', str(track_id))
+        try:
+            print('Retriving media url for track #' + str(track_id))
+            track_url = 'https://api-v2.soundcloud.com/tracks/TRACK_ID?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
+            track_url = track_url.replace('TRACK_ID', str(track_id))
 
-        res = urllib2.urlopen(track_url)
-        data = json.loads(res.read().decode())
+            res = urllib2.urlopen(track_url)
+            data = json.loads(res.read().decode())
 
-        progressive_url = data['media']['transcodings'][1]['url']
+            progressive_url = data['media']['transcodings'][1]['url']
 
-        progressive_url += '?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
+            progressive_url += '?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
 
-        res_progressive_url = urllib2.urlopen(progressive_url)
-        data_1 = json.loads(res_progressive_url.read().decode())
+            res_progressive_url = urllib2.urlopen(progressive_url)
+            data_1 = json.loads(res_progressive_url.read().decode())
 
-        return data_1['url']
+            return data_1['url']
+        except UnicodeDecodeError:
+            print("UnicodeDecodeError while getting track media_url for #" + str(track_id))
+            return False
         
     # Open a new VLC player
     def open_player(self):
@@ -99,12 +103,16 @@ def main():
         
         media_url = sound_client.get_track_media_url(track_id)
     
-        print('Playing: ' + track['title'])
-        sound_client.play_media(media_url)
-        
-        duration_second = float(track['duration']) / 1000
-        
-        time.sleep(duration_second)
+        if (media_url):
+            print('Playing: ' + track['title'])
+            sound_client.play_media(media_url)
+            
+            duration_second = float(track['duration']) / 1000
+            
+            time.sleep(duration_second)
+        else:
+            print("Can't playing: " + track['title'])
+            
     
 
 if __name__ == "__main__":
