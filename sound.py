@@ -1,7 +1,7 @@
 import soundcloud
 import json
 import webbrowser
-import urllib2
+import urllib3
 import vlc
 import time
 import random
@@ -16,10 +16,12 @@ class SoundClient:
     """
     vlc = None
     player = None
+    urllib3 = None
 
     def __init__(self):
         self.client = soundcloud.Client(client_id=self.client_id)
         self.vlc = vlc.Instance('--input-repeat=-1', '--fullscreen')
+        self.urllib3 = urllib3.PoolManager()
 
     # FIXME: Review the description
     # resolve track URL into resource
@@ -40,15 +42,15 @@ class SoundClient:
             track_url = 'https://api-v2.soundcloud.com/tracks/TRACK_ID?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
             track_url = track_url.replace('TRACK_ID', str(track_id))
 
-            res = urllib2.urlopen(track_url)
-            data = json.loads(res.read().decode())
+            res = self.urllib3.request('GET', track_url)
+            data = json.loads(res.data.decode())
 
             progressive_url = data['media']['transcodings'][1]['url']
 
             progressive_url += '?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
 
-            res_progressive_url = urllib2.urlopen(progressive_url)
-            data_1 = json.loads(res_progressive_url.read().decode())
+            res_progressive_url = self.urllib3.request('GET', progressive_url)
+            data_1 = json.loads(res_progressive_url.data.decode())
 
             return data_1['url']
         except UnicodeDecodeError:
@@ -103,7 +105,7 @@ def main():
         
         media_url = sound_client.get_track_media_url(track_id)
     
-        if (media_url):
+        if media_url:
             print('Playing: ' + track['title'])
             sound_client.play_media(media_url)
             
@@ -113,7 +115,6 @@ def main():
         else:
             print("Can't playing: " + track['title'])
             
-    
 
 if __name__ == "__main__":
     main()
