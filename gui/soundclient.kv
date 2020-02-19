@@ -1,0 +1,88 @@
+PlayerRoot:
+<PlayerRoot@BoxLayout>:
+    BoxLayout:
+        BoxLayout:
+            BoxLayout:
+                orientation: "vertical"
+                Label:
+                    size_hint_y: 4
+                    text: "info about radio"
+                BoxLayout:
+                    size_hint_y: 1
+                    BoxLayout:
+                        orientation: "vertical"
+                        BoxLayout:
+                            Button:
+                                text: "Previous"
+                                on_press: root.previous()
+                            Button:
+                                text: "Play/Stop"
+                                on_press: root.play_stop()
+                            Button:
+                                text: "Next"
+                                on_press: root.next()
+                Button:
+                    size_hint_y: 1
+                    text: "Shutdown"
+                    on_press: root.shutdown()
+
+        BoxLayout:
+            BoxLayout:
+                orientation: "vertical"
+                BoxLayout:
+
+
+                    Button:
+                        text: "Channel1"
+                        on_press: root.channel(1)
+                        #size_hint_y: None
+                        #size_hint_x: None
+                        Image:
+                            source: '../index.png'
+                            size_hint_y: None
+                            size_hint_x: None
+                            y: self.parent.y + .5* self.parent.height -.5 * self.parent.width/self.image_ratio
+                            x: self.parent.x
+                            #heigth: self.parent.width/self.image_ratio
+                            #heigth: self.parent.height
+                            width: self.parent.width
+                            keep_ratio: True
+                            allow_stretch: True
+                    Button:
+                        text: "Channel2"
+                        on_press: root.channel(2)
+                        Image:
+                            source: 'flux.png'
+                            width: self.parent.width
+                            size_hint_y: None
+                            size_hint_x: None
+                            y: self.parent.y + .5* self.parent.height -.5 * self.parent.width/self.image_ratio
+                            x: self.parent.x
+
+                            keep_ratio: True
+                            allow_stretch: True
+                    Button:
+                        text: "Channel3"
+                        on_press: root.channel(3)
+                BoxLayout:
+
+                    Button:
+                        text: "Channel4"
+                        on_press: root.channel(4)
+                    Button:
+                        text: "Channel5"
+                        on_press: root.channel(5)
+                    Button:
+                        text: "Channel6"
+                        on_press: root.channel(6)
+                BoxLayout:
+
+                    Button:
+                        text: "Channel7"
+                        on_press: root.channel(7)
+                    Button:
+                        text: "Channel8"
+                        on_press: root.channel(8)
+                    Button:
+                        text: "Channel9"
+                        on_press: root.channel(9)
