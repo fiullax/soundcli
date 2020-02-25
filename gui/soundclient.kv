@@ -5,8 +5,8 @@ PlayerRoot:
             BoxLayout:
                 orientation: "vertical"
                 Label:
-                    size_hint_y: 4
-                    text: "info about radio"
+                    size_hint_y: 3
+                    text: "info about track"
                 BoxLayout:
                     size_hint_y: 1
                     BoxLayout:
@@ -23,18 +23,17 @@ PlayerRoot:
                                 on_press: root.next()
                 Button:
                     size_hint_y: 1
-                    text: "Shutdown"
-                    on_press: root.shutdown()
+                    text: "Quit"
+                    on_press: root.quit()
+                    background_color: 1, .3, .4, .85
 
         BoxLayout:
             BoxLayout:
                 orientation: "vertical"
                 BoxLayout:
-
-
                     Button:
-                        text: "Channel1"
-                        on_press: root.channel(1)
+                        text: "Playlist1"
+                        on_press: root.playlist(1)
                         #size_hint_y: None
                         #size_hint_x: None
                         Image:
@@ -49,8 +48,8 @@ PlayerRoot:
                             keep_ratio: True
                             allow_stretch: True
                     Button:
-                        text: "Channel2"
-                        on_press: root.channel(2)
+                        text: "Playlist2"
+                        on_press: root.playlist(2)
                         Image:
                             source: 'flux.png'
                             width: self.parent.width
@@ -61,28 +60,11 @@ PlayerRoot:
 
                             keep_ratio: True
                             allow_stretch: True
-                    Button:
-                        text: "Channel3"
-                        on_press: root.channel(3)
-                BoxLayout:
 
-                    Button:
-                        text: "Channel4"
-                        on_press: root.channel(4)
-                    Button:
-                        text: "Channel5"
-                        on_press: root.channel(5)
-                    Button:
-                        text: "Channel6"
-                        on_press: root.channel(6)
                 BoxLayout:
-
                     Button:
-                        text: "Channel7"
-                        on_press: root.channel(7)
+                        text: "Playlist7"
+                        on_press: root.playlist(7)
                     Button:
-                        text: "Channel8"
-                        on_press: root.channel(8)
-                    Button:
-                        text: "Channel9"
-                        on_press: root.channel(9)
+                        text: "Playlist8"
+                        on_press: root.playlist(8)

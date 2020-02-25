@@ -9,20 +9,19 @@ class SoundClient(App):
 class PlayerRoot(BoxLayout):
 
     def previous(self):
-        print("Previous")
+        print("Previous track")
 
     def play_stop(self):
         print("Play/Stop")
 
-
     def next(self):
-        print("Next")
+        print("Next track")
 
-    def shutdown(self):
-        print("Shutdown")
+    def quit(self):
+        print("Quit")
 
-    def channel(self, num):
-        print("Channel")
+    def playlist(self, num):
+        print("Playlist #" + str(num))
 
 
 if __name__ == '__main__':
