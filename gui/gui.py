@@ -17,9 +17,6 @@ class PlayerRoot(BoxLayout):
     def next(self):
         print("Next track")
 
-    def quit(self):
-        print("Quit")
-
     def playlist(self, num):
         print("Playlist #" + str(num))
 
