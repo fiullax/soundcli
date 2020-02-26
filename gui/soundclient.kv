@@ -9,8 +9,21 @@ PlayerRoot:
 
     BoxLayout:
         BoxLayout:
+            #Image:
+                #source: './img/soundcloud-logo-2.png'
+                #y: 0
+                #x: 0
+                
             BoxLayout:
                 orientation: "vertical"
+                BoxLayout:
+                    size_hint_y: 0.5
+                    canvas.before:
+                        Color:
+                            rgba: 1, 0.333, 0, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
                 BoxLayout:
                     size_hint_y: 0.1
                 BoxLayout:
@@ -20,11 +33,11 @@ PlayerRoot:
                         keep_ratio: True
                         allow_stretch: True
                 BoxLayout:
-                    size_hint_y: 0.5
+                    size_hint_y: 1
                     Label:
                         text: "Track title"
                 BoxLayout:
-                    size_hint_y: 1
+                    size_hint_y: 2
                     BoxLayout:
                         orientation: "vertical"
                         BoxLayout:
@@ -48,16 +61,22 @@ PlayerRoot:
                                 text: "Next"
                                 on_press: root.next()
                                 background_color: 0, 0, 0, 0
-                Button:
-                    size_hint_y: 1
-                    text: "Quit"
-                    on_press: root.quit()
-                    background_color: 0, 0, 0, 0
 
         BoxLayout:
             BoxLayout:
                 orientation: "vertical"
                 BoxLayout:
+                    size_hint_y: 0.5
+                    canvas.before:
+                        Color:
+                            rgba: 1, 0.333, 0, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                BoxLayout:
+                    size_hint_y: 0.1
+                BoxLayout:
+                    size_hint_y: 3
                     Button:
                         #text: "Playlist1"
                         on_press: root.playlist(1)
@@ -84,6 +103,7 @@ PlayerRoot:
                             allow_stretch: True
 
                 BoxLayout:
+                    size_hint_y: 3
                     Button:
                         text: "Playlist7"
                         on_press: root.playlist(7)
