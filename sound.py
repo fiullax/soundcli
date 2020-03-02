@@ -1,10 +1,10 @@
 import soundcloud
 import json
 import webbrowser
-import urllib3
 import vlc
 import time
 import random
+import requests
 
 
 class SoundClient:
@@ -16,12 +16,10 @@ class SoundClient:
     """
     vlc = None
     player = None
-    urllib3 = None
 
     def __init__(self):
         self.client = soundcloud.Client(client_id=self.client_id)
         self.vlc = vlc.Instance('--input-repeat=-1', '--fullscreen')
-        self.urllib3 = urllib3.PoolManager()
 
     # FIXME: Review the description
     # resolve track URL into resource
@@ -34,25 +32,19 @@ class SoundClient:
         print("Retriving tracks from playlist: " + playlist.title)
         return playlist.obj['tracks']
 
-        # TODO: Review in general the function
-        # return the media url of the track (ready to be played)
+    # TODO: Review in general the function
+    # return the media url of the track (ready to be played)
     def get_track_media_url(self, track_id):
         try:
             print('Retriving media url for track #' + str(track_id))
-            track_url = 'https://api-v2.soundcloud.com/tracks/TRACK_ID?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
-            track_url = track_url.replace('TRACK_ID', str(track_id))
+            track_url = 'https://api-v2.soundcloud.com/tracks/' + str(track_id)
 
-            res = self.urllib3.request('GET', track_url)
-            data = json.loads(res.data.decode())
+            res_1 = requests.get(track_url, params= { "client_id": self.client_id })
+            progressive_url = json.loads(res_1.content)['media']['transcodings'][1]['url']
 
-            progressive_url = data['media']['transcodings'][1]['url']
-
-            progressive_url += '?client_id=cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
-
-            res_progressive_url = self.urllib3.request('GET', progressive_url)
-            data_1 = json.loads(res_progressive_url.data.decode())
-
-            return data_1['url']
+            res_2 = requests.get(progressive_url, params= { "client_id": self.client_id })
+            
+            return json.loads(res_2.content)['url']
         except UnicodeDecodeError:
             print("UnicodeDecodeError while getting track media_url for #" + str(track_id))
             return False
