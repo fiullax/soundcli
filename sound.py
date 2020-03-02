@@ -7,6 +7,13 @@ import random
 import requests
 
 
+class Playlist:
+
+    def __init__(self, sound_client, url):
+        res = sound_client.resolve_url('https://soundcloud.com/mattias-fiullax-games/sets/trap-italiana-free')
+        print(res.obj)
+        print("Playlist init")
+
 class SoundClient:
 
     client_id = 'cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
@@ -70,6 +77,8 @@ def main():
     playlist_url = 'https://soundcloud.com/mattias-fiullax-games/sets/trap-italiana-free'
 
     playlist = sound_client.resolve_url(playlist_url) 
+
+    playlist_obj = Playlist(sound_client, 'url')
     
     sound_client.open_player()
 
