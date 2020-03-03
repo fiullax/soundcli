@@ -7,6 +7,22 @@ import random
 import requests
 
 
+class Track:
+
+    title = None # Sfera Ebbasta - Blunt & Sprite (Prod. Charlie Charles),
+    duration = None # 170229,
+    artwork_url = None # https://i1.sndcdn.com/artworks-000142577548-kzeciq-large.jpg,
+    genre = None # Trap,
+    id = None # 241265638,
+    uri = None # https:None//api.soundcloud.com/tracks/241265638,
+    # waveform_url https://w1.sndcdn.com/32F8POxk3bVa_m.png,
+    permalink_url = None # https://soundcloud.com/sickago/sfera-ebbasta-blunt-sprite-prod-charlie-charles,
+    # stream_url https://api.soundcloud.com/tracks
+
+	def __init__(self):
+		pass
+
+
 class Playlist:
 
 	id = None
@@ -118,7 +134,7 @@ def main():
 		duration_second = float(track['duration']) / 1000
 		
 		time.sleep(duration_second)
-	"""    
+	"""        
 	
 	# Open url in a new window of the default browser, if possible
 	# webbrowser.open_new(data_1['url'])
