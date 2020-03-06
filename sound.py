@@ -29,6 +29,22 @@ class Track:
         self.api_v2_url = 'https://api-v2.soundcloud.com/tracks/' + str(self.id)
         self.permalink_url = api_track["permalink_url"]
 
+    # TODO: Review in general the function
+    def get_track_media_url(self, sound_client):
+        """return the media url of the track (ready to be played)"""
+        try:
+            print('Retriving media url for track #' + str(self.id))
+
+            res_1 = requests.get(self.api_v2_url, params= { "client_id": sound_client.client_id })
+            progressive_url = json.loads(res_1.content)['media']['transcodings'][1]['url']
+
+            res_2 = requests.get(progressive_url, params= { "client_id": sound_client.client_id })
+            
+            return json.loads(res_2.content)['url']
+        except UnicodeDecodeError:
+            print("UnicodeDecodeError while getting track media_url for #" + str(self.id))
+            return False
+
 
 class Playlist:
 
@@ -83,34 +99,18 @@ class SoundClient:
         self.vlc = vlc.Instance('--input-repeat=-1', '--fullscreen')
 
     # FIXME: Review the description
-    # resolve track URL into resource
     def resolve_url(self, url):
+        """resolve track URL into resource"""
         print('Resolving url: ' + url)
         return self.client.get('/resolve', url=url)
-
-    # TODO: Review in general the function
-    # return the media url of the track (ready to be played)
-    def get_track_media_url(self, track):
-        try:
-            print('Retriving media url for track #' + str(track.id))
-
-            res_1 = requests.get(track.api_v2_url, params= { "client_id": self.client_id })
-            progressive_url = json.loads(res_1.content)['media']['transcodings'][1]['url']
-
-            res_2 = requests.get(progressive_url, params= { "client_id": self.client_id })
-            
-            return json.loads(res_2.content)['url']
-        except UnicodeDecodeError:
-            print("UnicodeDecodeError while getting track media_url for #" + str(track.id))
-            return False
         
-    # Open a new VLC player
     def open_player(self):
+        """Open a new VLC player"""
         print('Instance a new VLC player..')
         self.player = self.vlc.media_player_new() 
     
-    # Define VLC media and play it
     def play_media(self, media_url):
+        """Define VLC media and play it"""
         print('Playing track..')
         media = self.vlc.media_new(media_url)
 
@@ -130,18 +130,17 @@ def main():
     
     sound_client.open_player()
 
-    """ Playlist play in order
-    for track in sound_client.get_playlist_tracks(playlist):
-        track_id = track['id']
-        
-        media_url = sound_client.get_track_media_url(track_id)
-    
-        sound_client.play_media(media_url)
-        
-        duration_second = float(track['duration']) / 1000
-        
-        time.sleep(duration_second)
-    """        
+    # Playlist play in order
+    #for track in sound_client.get_playlist_tracks(playlist):
+    #    track_id = track['id']
+    #   
+    #    media_url = sound_client.get_track_media_url(track_id)
+    #
+    #    sound_client.play_media(media_url)
+    #    
+    #    duration_second = float(track['duration']) / 1000
+    #    
+    #    time.sleep(duration_second)
     
     # Open url in a new window of the default browser, if possible
     # webbrowser.open_new(data_1['url'])
@@ -151,7 +150,7 @@ def main():
     while True:
         track = random.choice(tracks)
         
-        media_url = sound_client.get_track_media_url(track)
+        media_url = track.get_track_media_url(sound_client)
     
         if media_url:
             print('Playing: ' + track.title)
