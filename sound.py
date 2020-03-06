@@ -63,7 +63,7 @@ class Playlist:
     def __init__(self, sound_client, url):
         print("Playlist __init__")
         # TODO: To manage api errors
-        res = sound_client.resolve_url('https://soundcloud.com/mattias-fiullax-games/sets/trap-italiana-free')
+        res = sound_client.resolve_url(url)
         self.id = res.obj["id"]
         self.title = res.obj["title"]
         self.description = res.obj["description"]
@@ -117,50 +117,50 @@ class SoundClient:
         self.player.set_media(media)
         self.player.play()
 
+    def playlist_sequentially(self, playlist):
+        """Playlist with sequentially play"""
+        for track in playlist.get_tracks():
+
+            media_url = track.get_track_media_url(self)        
+            self.play_media(media_url)
+        
+            duration_second = float(track.duration) / 1000
+            time.sleep(duration_second)
+
+    def playlist_shuffled(self, playlist):
+        """Playlist with shuffled play"""
+        tracks = playlist.get_tracks()
+        while True:
+            track = random.choice(tracks)
+            
+            media_url = track.get_track_media_url(self)
+        
+            if media_url:
+                print('Playing: ' + track.title)
+                self.play_media(media_url)
+                
+                duration_second = float(track.duration) / 1000
+                
+                time.sleep(duration_second)
+            else:
+                print("Can't playing: " + track.title)
+
+    def webplayer(self, media_url):
+        """Open media url in a new window of the default browser, if possible"""
+        webbrowser.open_new(media_url)
 
 def main():
     sound_client = SoundClient()
 
-    # a permalink to a track/playlist
-    playlist_url = 'https://soundcloud.com/mattias-fiullax-games/sets/trap-italiana-free'
+    # permalink to a track/playlist
+    # playlist_url = 'https://soundcloud.com/mattias-fiullax-games/sets/trap-italiana-free'
+    playlist_url = input("Playlist permalink: ")
 
-    # playlist = sound_client.resolve_url(playlist_url) 
-
-    playlist = Playlist(sound_client, 'url')
+    playlist = Playlist(sound_client, playlist_url)
     
     sound_client.open_player()
 
-    # Playlist play in order
-    #for track in sound_client.get_playlist_tracks(playlist):
-    #    track_id = track['id']
-    #   
-    #    media_url = sound_client.get_track_media_url(track_id)
-    #
-    #    sound_client.play_media(media_url)
-    #    
-    #    duration_second = float(track['duration']) / 1000
-    #    
-    #    time.sleep(duration_second)
-    
-    # Open url in a new window of the default browser, if possible
-    # webbrowser.open_new(data_1['url'])
-    
-    # Playlist random play
-    tracks = playlist.get_tracks()
-    while True:
-        track = random.choice(tracks)
-        
-        media_url = track.get_track_media_url(sound_client)
-    
-        if media_url:
-            print('Playing: ' + track.title)
-            sound_client.play_media(media_url)
-            
-            duration_second = float(track.duration) / 1000
-            
-            time.sleep(duration_second)
-        else:
-            print("Can't playing: " + track.title)
+    sound_client.playlist_sequentially(playlist)
             
 
 if __name__ == "__main__":
