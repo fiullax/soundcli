@@ -86,7 +86,7 @@ class Playlist:
 
 class SoundClient:
 
-    client_id = 'cZQKaMjH39KNADF4y2aeFtVqNSpgoKVj'
+    client_id = 't0h1jzYMsaZXy6ggnZO71gHK3Ms6CFwE'
     client = None
     """ TODO: Secret code for log in user private area
     client_secret = '3332dcf51a6f9d2c659dbb57c8068ed'
