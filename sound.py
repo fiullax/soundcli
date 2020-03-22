@@ -16,6 +16,7 @@ class Track:
     
     api_url = None
     api_v2_url = None
+    progressive_url = None
     permalink_url = None
     img_url = None
 
@@ -27,19 +28,20 @@ class Track:
         self.id = api_track["id"]
         self.api_url = api_track["uri"]
         self.api_v2_url = 'https://api-v2.soundcloud.com/tracks/' + str(self.id)
+        self.progressive_url = self.api_url + "/stream"
         self.permalink_url = api_track["permalink_url"]
 
-    # TODO: Review in general the function
+    # FIXME: Review in general the function and remove or not?
     def get_track_media_url(self, sound_client):
         """return the media url of the track (ready to be played)"""
         try:
             print('Retriving media url for track #' + str(self.id))
 
-            res_1 = requests.get(self.api_v2_url, params= { "client_id": sound_client.client_id })
-            progressive_url = json.loads(res_1.content)['media']['transcodings'][1]['url']
+            # res_1 = requests.get(self.api_v2_url, params= { "client_id": sound_client.client_id })
+            # progressive_url = json.loads(res_1.content)['media']['transcodings'][1]['url']
 
-            res_2 = requests.get(progressive_url, params= { "client_id": sound_client.client_id })
-            
+            res_2 = requests.get(self.progressive_url, params={"client_id": sound_client.client_id})
+
             return json.loads(res_2.content)['url']
         except UnicodeDecodeError:
             print("UnicodeDecodeError while getting track media_url for #" + str(self.id))
@@ -86,7 +88,7 @@ class Playlist:
 
 class SoundClient:
 
-    client_id = 't0h1jzYMsaZXy6ggnZO71gHK3Ms6CFwE'
+    client_id = 'a0f84e7c2d612d845125fb5eebff5b37'
     client = None
     """ TODO: Secret code for log in user private area
     client_secret = '3332dcf51a6f9d2c659dbb57c8068ed'
@@ -121,7 +123,8 @@ class SoundClient:
         """Playlist with sequentially play"""
         for track in playlist.get_tracks():
 
-            media_url = track.get_track_media_url(self)        
+            # media_url = track.get_track_media_url(self)
+            media_url = track.progressive_url + '?client_id=' + self.client_id
             self.play_media(media_url)
         
             duration_second = float(track.duration) / 1000
@@ -133,7 +136,8 @@ class SoundClient:
         while True:
             track = random.choice(tracks)
             
-            media_url = track.get_track_media_url(self)
+            # media_url = track.get_track_media_url(self)
+            media_url = track.progressive_url + '?client_id=' + self.client_id
         
             if media_url:
                 print('Playing: ' + track.title)
