@@ -1,10 +1,11 @@
 import soundcloud
-import json
-import webbrowser
 import vlc
-import time
-import random
 import requests
+import random
+import time
+import webbrowser
+import json
+from settings import settings
 
 
 class Track:
@@ -31,22 +32,6 @@ class Track:
         self.progressive_url = self.api_url + "/stream"
         self.permalink_url = api_track["permalink_url"]
 
-    # FIXME: Review in general the function and remove or not?
-    def get_track_media_url(self, sound_client):
-        """return the media url of the track (ready to be played)"""
-        try:
-            print('Retriving media url for track #' + str(self.id))
-
-            # res_1 = requests.get(self.api_v2_url, params= { "client_id": sound_client.client_id })
-            # progressive_url = json.loads(res_1.content)['media']['transcodings'][1]['url']
-
-            res_2 = requests.get(self.progressive_url, params={"client_id": sound_client.client_id})
-
-            return json.loads(res_2.content)['url']
-        except UnicodeDecodeError:
-            print("UnicodeDecodeError while getting track media_url for #" + str(self.id))
-            return False
-
 
 class Playlist:
 
@@ -62,9 +47,9 @@ class Playlist:
     api_url = None
     img_url = None
 
+    # TODO: To manage resolve_url errors
     def __init__(self, sound_client, url):
         print("Playlist __init__")
-        # TODO: To manage api errors
         res = sound_client.resolve_url(url)
         self.id = res.obj["id"]
         self.title = res.obj["title"]
@@ -80,29 +65,24 @@ class Playlist:
         self.api_url = res.obj["uri"]
         self.img_url = res.obj["artwork_url"]
 
-    # return a dict with the tracks of the playlist
     def get_tracks(self):
+        """Return a dict with the tracks of the playlist"""
         print("Getting tracks from playlist: " + self.title + " #" + str(self.id))
         return self.tracks
 
 
 class SoundClient:
 
-    client_id = 'a0f84e7c2d612d845125fb5eebff5b37'
     client = None
-    """ TODO: Secret code for log in user private area
-    client_secret = '3332dcf51a6f9d2c659dbb57c8068ed'
-    """
     vlc = None
     player = None
 
     def __init__(self):
-        self.client = soundcloud.Client(client_id=self.client_id)
+        self.client = soundcloud.Client(client_id=settings.SOUNDCLOUD_CLIENT_KEY)
         self.vlc = vlc.Instance('--input-repeat=-1', '--fullscreen')
 
-    # FIXME: Review the description
     def resolve_url(self, url):
-        """resolve track URL into resource"""
+        """Resolve soundcloud_api URL"""
         print('Resolving url: ' + url)
         return self.client.get('/resolve', url=url)
         
@@ -123,8 +103,7 @@ class SoundClient:
         """Playlist with sequentially play"""
         for track in playlist.get_tracks():
 
-            # media_url = track.get_track_media_url(self)
-            media_url = track.progressive_url + '?client_id=' + self.client_id
+            media_url = track.progressive_url + '?client_id=' + settings.SOUNDCLOUD_CLIENT_KEY
             self.play_media(media_url)
         
             duration_second = float(track.duration) / 1000
@@ -136,8 +115,7 @@ class SoundClient:
         while True:
             track = random.choice(tracks)
             
-            # media_url = track.get_track_media_url(self)
-            media_url = track.progressive_url + '?client_id=' + self.client_id
+            media_url = track.progressive_url + '?client_id=' + settings.SOUNDCLOUD_CLIENT_KEY
         
             if media_url:
                 print('Playing: ' + track.title)
@@ -152,20 +130,3 @@ class SoundClient:
     def webplayer(self, media_url):
         """Open media url in a new window of the default browser, if possible"""
         webbrowser.open_new(media_url)
-
-def main():
-    sound_client = SoundClient()
-
-    # permalink to a track/playlist
-    # playlist_url = 'https://soundcloud.com/mattias-fiullax-games/sets/trap-italiana-free'
-    playlist_url = input("Playlist permalink: ")
-
-    playlist = Playlist(sound_client, playlist_url)
-    
-    sound_client.open_player()
-
-    sound_client.playlist_sequentially(playlist)
-            
-
-if __name__ == "__main__":
-    main()
