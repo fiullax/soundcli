@@ -3,3 +3,4 @@ soundcloud
 six
 python-vlc
 requests
+pynput
